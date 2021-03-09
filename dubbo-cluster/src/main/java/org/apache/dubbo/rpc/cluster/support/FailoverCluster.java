@@ -26,6 +26,7 @@ import org.apache.dubbo.rpc.cluster.support.wrapper.AbstractCluster;
  */
 public class FailoverCluster extends AbstractCluster {
 
+    //默认失败重试
     public final static String NAME = "failover";
 
     @Override

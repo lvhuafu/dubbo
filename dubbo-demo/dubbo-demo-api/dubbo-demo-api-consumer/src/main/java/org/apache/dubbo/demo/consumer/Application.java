@@ -26,11 +26,11 @@ import org.apache.dubbo.rpc.service.GenericService;
 
 public class Application {
     public static void main(String[] args) {
-        if (isClassic(args)) {
+//        if (isClassic(args)) {
             runWithRefer();
-        } else {
-            runWithBootstrap();
-        }
+//        } else {
+//            runWithBootstrap();
+//        }
     }
 
     private static boolean isClassic(String[] args) {
@@ -64,6 +64,7 @@ public class Application {
         reference.setApplication(new ApplicationConfig("dubbo-demo-api-consumer"));
         reference.setRegistry(new RegistryConfig("zookeeper://127.0.0.1:2181"));
         reference.setInterface(DemoService.class);
+//        reference.setLoadbalance("consistenthash");
         DemoService service = reference.get();
         String message = service.sayHello("dubbo");
         System.out.println(message);
