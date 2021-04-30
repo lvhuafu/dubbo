@@ -46,6 +46,7 @@ public abstract class AbstractLoadBalance implements LoadBalance {
      * @return weight which takes warmup into account
      */
     static int calculateWarmupWeight(int uptime, int warmup, int weight) {
+        // 比例
         int ww = (int) ( uptime / ((float) warmup / weight));
         return ww < 1 ? 1 : (Math.min(ww, weight));
     }
@@ -55,9 +56,9 @@ public abstract class AbstractLoadBalance implements LoadBalance {
         if (CollectionUtils.isEmpty(invokers)) {
             return null;
         }
-        if (invokers.size() == 1) {
-            return invokers.get(0);
-        }
+//        if (invokers.size() == 1) {
+//            return invokers.get(0);
+//        }
         return doSelect(invokers, url, invocation);
     }
 
@@ -77,20 +78,24 @@ public abstract class AbstractLoadBalance implements LoadBalance {
         URL url = invoker.getUrl();
         // Multiple registry scenario, load balance among multiple registries.
         if (REGISTRY_SERVICE_REFERENCE_PATH.equals(url.getServiceInterface())) {
+            //registry.weight   default=100
             weight = url.getParameter(REGISTRY_KEY + "." + WEIGHT_KEY, DEFAULT_WEIGHT);
         } else {
+            // 取方法的参数   weight default=100
             weight = url.getMethodParameter(invocation.getMethodName(), WEIGHT_KEY, DEFAULT_WEIGHT);
             if (weight > 0) {
+                // timestamp default = 0
                 long timestamp = invoker.getUrl().getParameter(TIMESTAMP_KEY, 0L);
-                if (timestamp > 0L) {
+                if (timestamp > 0L) {//timestamp=0 就不进入了
                     long uptime = System.currentTimeMillis() - timestamp;
-                    if (uptime < 0) {
+                    if (uptime < 0) {//还没到timestamp 直接返回1（这权重很小了，应该是说这个节点不优先使用，但也是可以使用）
                         return 1;
                     }
+                    // warmup deafult = 10 * 60 * 1000 (10分钟？？)
                     int warmup = invoker.getUrl().getParameter(WARMUP_KEY, DEFAULT_WARMUP);
-                    if (uptime > 0 && uptime < warmup) {
-                        weight = calculateWarmupWeight((int)uptime, warmup, weight);
-                    }
+                    if (uptime > 0 && uptime < warmup) {//超过timestamp 且 warmup（预热时间） 时间大于 uptime
+                        weight = calculateWarmupWeight((int)uptime, warmup, weight);//比例  过了60%的预热时间，weight = weight*60%
+                    }//预热时间过了当正常节点对待就行了
                 }
             }
         }

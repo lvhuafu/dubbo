@@ -78,6 +78,7 @@ public class ApplicationModel {
     private static final ExtensionLoader<FrameworkExt> LOADER = ExtensionLoader.getExtensionLoader(FrameworkExt.class);
 
     public static void initFrameworkExts() {
+        //frameworkExt继承Lifecycle接口 包含3个行为接口，start，destroy，initialize
         Set<FrameworkExt> exts = ExtensionLoader.getExtensionLoader(FrameworkExt.class).getSupportedExtensionInstances();
         for (FrameworkExt ext : exts) {
             ext.initialize();

@@ -35,22 +35,25 @@ public interface Directory<T> extends Node {
 
     /**
      * get service type.
-     *
+     * 获得服务类型，例如：com.alibaba.dubbo.demo.DemoService
      * @return service type.
      */
     Class<T> getInterface();
 
     /**
      * list invokers.
-     *
+     * 获得所有服务 Invoker 集合
      * @return invokers
      */
     List<Invoker<T>> list(Invocation invocation) throws RpcException;
 
+    //返回所有的invoker
     List<Invoker<T>> getAllInvokers();
 
+    //？？
     URL getConsumerUrl();
 
+    //？？
     boolean isDestroyed();
 
 }

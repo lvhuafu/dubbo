@@ -260,8 +260,10 @@ public class ExtensionLoader<T> {
     public List<T> getActivateExtension(URL url, String[] values, String group) {
         List<T> activateExtensions = new ArrayList<>();
         List<String> names = values == null ? new ArrayList<>(0) : asList(values);
+        //不包含"-default"
         if (!names.contains(REMOVE_VALUE_PREFIX + DEFAULT_KEY)) {
-            getExtensionClasses();
+            getExtensionClasses();//加载所有class
+            //cachedActivates 是所有带 @Activate 注解的（默认激活的插件）
             for (Map.Entry<String, Object> entry : cachedActivates.entrySet()) {
                 String name = entry.getKey();
                 Object activate = entry.getValue();
@@ -277,6 +279,12 @@ public class ExtensionLoader<T> {
                 } else {
                     continue;
                 }
+                /**
+                 * 1.组匹配
+                 * 2.不包含传入标识
+                 * 3.不包含废弃
+                 * 4.特殊参数激活
+                 */
                 if (isMatchGroup(group, activateGroup)
                         && !names.contains(name)
                         && !names.contains(REMOVE_VALUE_PREFIX + name)
@@ -289,6 +297,7 @@ public class ExtensionLoader<T> {
         List<T> loadedExtensions = new ArrayList<>();
         for (int i = 0; i < names.size(); i++) {
             String name = names.get(i);
+            //不是废弃的
             if (!name.startsWith(REMOVE_VALUE_PREFIX)
                     && !names.contains(REMOVE_VALUE_PREFIX + name)) {
                 if (DEFAULT_KEY.equals(name)) {

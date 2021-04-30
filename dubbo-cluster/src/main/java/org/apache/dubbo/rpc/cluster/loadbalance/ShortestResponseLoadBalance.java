@@ -38,15 +38,15 @@ public class ShortestResponseLoadBalance extends AbstractLoadBalance {
 
     @Override
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
-        // Number of invokers
+        //invokers 数量
         int length = invokers.size();
-        // Estimated shortest response time of all invokers
+        // 预估的最小相应时间
         long shortestResponse = Long.MAX_VALUE;
-        // The number of invokers having the same estimated shortest response time
+        // 最小相应时间的节点数
         int shortestCount = 0;
-        // The index of invokers having the same estimated shortest response time
+        // leastIndexs 用于记录具有相同“最小活跃数”的 Invoker 在 invokers 列表中的下标信息
         int[] shortestIndexes = new int[length];
-        // the weight of every invokers
+        // 权重数组
         int[] weights = new int[length];
         // The sum of the warmup weights of all the shortest response  invokers
         int totalWeight = 0;

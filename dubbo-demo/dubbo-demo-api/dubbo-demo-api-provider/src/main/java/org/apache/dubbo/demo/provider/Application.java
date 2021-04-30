@@ -18,6 +18,7 @@ package org.apache.dubbo.demo.provider;
 
 import org.apache.dubbo.config.ApplicationConfig;
 import org.apache.dubbo.config.MethodConfig;
+import org.apache.dubbo.config.ProviderConfig;
 import org.apache.dubbo.config.RegistryConfig;
 import org.apache.dubbo.config.ServiceConfig;
 import org.apache.dubbo.config.bootstrap.DubboBootstrap;
@@ -56,7 +57,7 @@ public class Application {
     private static void startWithExport() throws InterruptedException {
         MethodConfig methodConfig = new MethodConfig();
         methodConfig.setName("sayHello");
-        methodConfig.setLoadbalance("shortestresponse");
+        methodConfig.setLoadbalance("consistenthash");
         List<MethodConfig> methodConfigList = new ArrayList<>();
         methodConfigList.add(methodConfig);
 

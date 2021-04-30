@@ -51,9 +51,11 @@ public class ConsistentHashLoadBalance extends AbstractLoadBalance {
     @Override
     protected <T> Invoker<T> doSelect(List<Invoker<T>> invokers, URL url, Invocation invocation) {
         String methodName = RpcUtils.getMethodName(invocation);
+        //key = '{group}/{interfaceName}:{version}.{methodName}'
         String key = invokers.get(0).getUrl().getServiceKey() + "." + methodName;
         // using the hashcode of list to compute the hash only pay attention to the elements in the list
         int invokersHashCode = invokers.hashCode();
+        //
         ConsistentHashSelector<T> selector = (ConsistentHashSelector<T>) selectors.get(key);
         if (selector == null || selector.identityHashCode != invokersHashCode) {
             selectors.put(key, new ConsistentHashSelector<T>(invokers, methodName, invokersHashCode));

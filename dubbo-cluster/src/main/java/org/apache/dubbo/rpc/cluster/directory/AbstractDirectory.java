@@ -46,16 +46,18 @@ public abstract class AbstractDirectory<T> implements Directory<T> {
 
     // logger
     private static final Logger logger = LoggerFactory.getLogger(AbstractDirectory.class);
-
+    /**
+     * 注册中心 URL
+     */
     private final URL url;
-
+    //是否已经销毁
     private volatile boolean destroyed = false;
 
     protected volatile URL consumerUrl;
 
     protected final Map<String, String> queryMap; // Initialization at construction time, assertion not null
     protected final String consumedProtocol;
-
+    //路由链
     protected RouterChain<T> routerChain;
 
     public AbstractDirectory(URL url) {

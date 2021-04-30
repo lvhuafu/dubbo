@@ -140,6 +140,7 @@ public class RegistryDirectory<T> extends DynamicDirectory<T> implements NotifyL
         }
     }
 
+    //通过此接口方法得到变更信息，并根据变更信息动态调整内部 Invoker 列表。
     @Override
     public synchronized void notify(List<URL> urls) {
         Map<String, List<URL>> categoryUrls = urls.stream()

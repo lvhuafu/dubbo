@@ -58,8 +58,13 @@ public abstract class DynamicDirectory<T> extends AbstractDirectory<T> implement
 
     private static final Logger logger = LoggerFactory.getLogger(DynamicDirectory.class);
 
+    /**
+     * Cluster$Adaptive 对象
+     */
     protected static final Cluster CLUSTER = ExtensionLoader.getExtensionLoader(Cluster.class).getAdaptiveExtension();
-
+    /**
+     * RouterFactory$Adaptive 对象
+     */
     protected static final RouterFactory ROUTER_FACTORY = ExtensionLoader.getExtensionLoader(RouterFactory.class)
             .getAdaptiveExtension();
 
@@ -142,6 +147,7 @@ public abstract class DynamicDirectory<T> extends AbstractDirectory<T> implement
         registry.unsubscribe(url, this);
     }
 
+    //路由链执行，获取可用invokers
     @Override
     public List<Invoker<T>> doList(Invocation invocation) {
         if (forbidden) {
